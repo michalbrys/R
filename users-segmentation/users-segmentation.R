@@ -24,7 +24,7 @@ head(clustered_users)
 #install.packages("plotly")
 library(plotly)
 
-plot_ly(df, x = clustered_users$beginner_pv, y = clustered_users$intermediate_pv, z = clustered_users$advanced_pv, type = "scatter3d", mode = "markers", color=factor(clustered_users$fit.cluster))
+plot_ly(clustered_users, x = clustered_users$beginner_pv, y = clustered_users$intermediate_pv, z = clustered_users$advanced_pv, type = "scatter3d", mode = "markers", color=factor(clustered_users$fit.cluster))
 
 # Write results to file
 write.csv(clustered_users, "clustered-users.csv", row.names=T)
