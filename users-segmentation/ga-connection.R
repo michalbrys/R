@@ -1,28 +1,35 @@
-# Configure connection with Google Analtics API
+# hello world example
 
-# install.packages("RGoogleAnalytics")
-library(RGoogleAnalytics)
+# install libraries
+# install.packages("googleAuthR")
+# install.packages("googleAnalyticsR")
 
-# Get credentials on https://goo.gl/2CGLsc
-client.id <- "xxxxxxxxxxxx.apps.googleusercontent.com"
-client.secret <- "zzzzzzzzzzzz"
+# load libraries
+library("googleAuthR")
+library("googleAnalyticsR")
 
-# Authorize access to Google Analytics data
-token <- Auth(client.id,client.secret)
-ValidateToken(token)
+# optional - add your own Google Developers Console key
+#options(googleAuthR.client_id = "uxxxxxxx2fd4kesu6.apps.googleusercontent.com")
+#options(googleAuthR.client_secret = "3JhLa_GxxxxxCQYLe31c64")
+#options(googleAuthR.scopes.selected = "https://www.googleapis.com/auth/analytics")
 
-# Save the token object for future sessions
-save(token,file="./token_file")
+# authorize connection with Google Analytics servers
+ga_auth()
 
-# Get the Unique Pageviews by User in Content Group
-query.list <- Init(start.date = "2015-01-01",
-                   end.date = "2015-01-31",
-                   dimensions = "ga:dimension1,ga:contentGroup1",
-                   metrics = "ga:contentGroupUniqueViews1",
-                   table.id = "ga:00000000")
+## get your accounts
+account_list <- google_analytics_account_list()
 
-# Create the Query Builder object
-ga.query <- QueryBuilder(query.list)
+## pick a profile with data to query
+#ga_id <- account_list[275,'viewId']
 
-# Extract the data and store it in a data-frame
-ga.data <- GetReportData(ga.query, token)
+# or give it explicite using tool http://michalbrys.github.io/ga-tools/table-id.html in format 99999999
+ga_id <- 00000000
+
+# get data from Goolgle Analytics account
+ga.data <- google_analytics(id = ga_id, 
+                           start="2016-01-01", end="2016-06-30",
+                           dimensions = "ga:dimension1,ga:contentGroup1",
+                           metrics = "ga:contentGroupUniqueViews1",
+                           max = 5000)
+
+head(ga.data)
